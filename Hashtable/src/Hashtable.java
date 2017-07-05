@@ -22,9 +22,11 @@ public class Hashtable<K,V> {
 			this.value = value;
 		}
 	}
-	
+
 	// aramzena os dados da tabela hash.
-	private Object[] dados = new Object[10];
+	private int maxSize = 3;
+	private Object[] dados = new Object[maxSize];
+
 
 	/**
 	 * Insere um dado na tabela, baseado na sua chave.
@@ -42,6 +44,24 @@ public class Hashtable<K,V> {
 				return;
 			} else {
 				indice = (indice + 1) % dados.length;
+			}
+
+			if (dados.length == maxSize) {
+				resize();
+				System.out.println("RESIZING HASH TABLE: New size: "+maxSize);
+			}
+		}
+	}
+
+	private void resize() {
+		int newMaxSize = maxSize * 2;
+		maxSize = newMaxSize;
+		Object[] oldDados = dados;
+		dados = new Object[newMaxSize];
+		for (int i=0; i<oldDados.length; i++) {
+			if (oldDados[i] != null) {
+				Pair<K,V> p = (Pair<K,V>)oldDados[i];
+				put(p.key, p.value);
 			}
 		}
 	}
@@ -73,7 +93,7 @@ public class Hashtable<K,V> {
 	public static void main(String[] args) {
 		// Cria tabela
 		Hashtable<String, Integer> hash = new Hashtable<>();
-		
+
 		// Insere dados na tabela.
 		hash.put("Laura", 6);
 		hash.put("Rafael", 1);
